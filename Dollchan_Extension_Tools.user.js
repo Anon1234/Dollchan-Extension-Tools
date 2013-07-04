@@ -6442,19 +6442,19 @@ Post.prototype = {
 		this.btns = ref.nextSibling;
 	},
 	_addFullImage: function(el, data, inPost, isFast) {
-		var elMove, elStop, newW, newH, srcH, img, scrW = Post.sizing.wWidth;
+		var elMove, elStop, newW, newH, srcH, img, scrW = Post.sizing.wWidth, tmpH = tmpW = 0;
 		if(inPost) {
 			el.style.display = 'none';
 			scrW -= isFast ? Post.sizing.getCachedOffset(this.count, el) : Post.sizing.getOffset(el);
 		} else {
 			$del($c('de-img-center', doc));
 		}
-		newW = data.width < scrW ? data.width : scrW;
+		newW = data.width < scrW ? data.width : scrW - (tmpW = (aib.fch || aib.hana || aib.krau ? 0 : 22)); // 2*10px margin + 2*1px border
 		newH = newW * data.height / data.width;
 		if(inPost) {
 			data.expanded = true;
 		} else if(newH > (scrH = Post.sizing.wHeight)) {
-			newH = scrH;
+			newH = scrH - (tmpH = (aib.fch || aib.hana || aib.krau ? 0 : 6)); // 2*2px margin + 2*1px border
 			newW = newH * data.width / data.height;
 		}
 		img = $add('<img class="de-img-full" src="' + data.src + '" alt="' + data.src +
@@ -6474,7 +6474,7 @@ Post.prototype = {
 		$after(el, img);
 		if(!inPost) {
 			img.classList.add('de-img-center');
-			img.style.cssText = 'left: ' + (scrW - newW) / 2 + 'px; top: ' + (scrH - newH) / 2 + 'px;';
+			img.style.cssText = 'left: ' + (scrW - newW - tmpW) / 2 + 'px; top: ' + (scrH - newH  - tmpH) / 2 + 'px;';
 			img.addEventListener(nav.Firefox ? 'DOMMouseScroll' : 'mousewheel', function(e) {
 				var curX = e.clientX,
 					curY = e.clientY,
